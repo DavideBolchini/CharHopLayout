@@ -231,15 +231,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==2) // spMode -> Forward
             {
-
+                spMode.spModeForward(tts);
             }
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==4) // spMode -> Backward
             {
-
+                spMode.spModeBackward(tts);
             }
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & data==1) // spMode -> Selection
             {
-
+                spMode.spModeSelection(tts);
             }
             /*
              *   #####Autosuggestions Mode
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             /*
              *  ###########Database Mode Coding Starts Here
              * */
-            
+
         }
 
         @Override
