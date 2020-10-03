@@ -21,30 +21,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static com.example.charhoplayout.EarconManager.selectEarcon;
+
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     /*
-     * Variable Declaration for Alphabetical Mode
+     * Variable Declaration
      * */
-        int head_point  = 0;                // Pointer to Locate Character
-        String alredyTyped="";              // Stores Selected Character
-
-        ArrayList<String> suggestions;      // Suggested Characters from A - Z and Space
-        ArrayAdapter<String> suggestionsAdapter;
-
     public static TextToSpeech tts;         // Text To Speech Engine
 
-    boolean allowSearchScan=false;
+    static boolean allowSearchScan=false;
 
+
+    /*
+     * Variable Declaration for Number Mode
+     * */
     boolean isNumberMode=false;
     int numberModeToggle=0;
 
     boolean isDatabaseMode=false;
 
 
+    /*
+     * Variable Declaration for Special Character Mode
+     * */
     boolean isspMode=false;
     int spModeToggle=0;
-
+    static int toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +63,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         tts = new TextToSpeech(this,MainActivity.this);
 
-        //AlphabetMode alMode = new AlphabetMode(getApplicationContext());
-
-//        String s = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z, ,";
-//        suggestions = new ArrayList<>(Arrays.asList(s.split(",")));
-//        suggestionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggestions);
-//        suggestionsAdapter.notifyDataSetChanged();
-
-
     }
 
     public TapListener mTap =new TapListener() {
@@ -75,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         AlphabetMode alMode = new AlphabetMode(MainActivity.this);
         NumbersMode nmMode = new NumbersMode(MainActivity.this);
         SpecialCharactersMode spMode = new SpecialCharactersMode(MainActivity.this);
+        TypedString tyString = new TypedString();
+        EditMode edMode = new EditMode(MainActivity.this);
 
         @Override
         public void onBluetoothTurnedOn() {
@@ -97,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             alMode.alModeInitialise();
             nmMode.nmModeInitialise();
             spMode.spModeInitialise();
+            tyString.typedStringInitialise();
+            EarconManager earconManager = new EarconManager();
+            earconManager.setupEarcons(MainActivity.tts,getApplicationContext().getPackageName());
         }
 
         @Override
@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
          * */
         @Override
         public void onTapInputReceived(@NonNull String tapIdentifier, int data) {
-
             EarconManager earconManager = new EarconManager();
             earconManager.setupEarcons(MainActivity.tts,getApplicationContext().getPackageName());
 
@@ -177,15 +176,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
             else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==1) // alMode -> Selection
             {
-                alMode.alModeSelect(tts);
+                tyString.alreadyTyped = alMode.alModeSelect(tts,tyString.alreadyTyped);
             }
             else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 30) // alMode -> SpeakOut
             {
-                alMode.alModeSpeakOut(tts);
+                alMode.alModeSpeakOut(tts,tyString.alreadyTyped);
             }
             else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==16) // alMode ->Deletion
             {
-                alMode.alModeDelete(tts);
+                tyString.alreadyTyped = alMode.alModeDelete(tts,tyString.alreadyTyped);
             }
             else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 8) // alMode -> Reset
             {
@@ -197,10 +196,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==false & data==3) // nmMode -> Enter
             {
                 //Enter Number Mode
+                tts.speak("Entered Number Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                isNumberMode=true;
+                numberModeToggle=1;
             }
             else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==3) // nmMode -> Exit
             {
                 //Exit Number Mode
+                tts.speak("Exit Number Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                isNumberMode=false;
+                numberModeToggle=0;
+                nmMode.numberHeadPoint = 0;
             }
             else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==2) // nmMode -> Forward
             {
@@ -212,22 +218,27 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
             else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==1) // nmMode -> Selection
             {
-
+                tyString.alreadyTyped = nmMode.nmModeSelection(tts,tyString.alreadyTyped);
             }
             else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==16) // nmMode -> Delete
             {
-
+                tyString.alreadyTyped = nmMode.nmModeDeletion(tts,tyString.alreadyTyped);
             }
             /*
              *  ###########Special Characters Mode Coding Starts Here
              * */
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==false & data==5) // spMode -> Enter
             {
-
+                tts.speak("Entered Special Characters Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                isspMode=true;
+                spModeToggle=1;
             }
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1  & data==5) // spMode -> Exit
             {
-
+                tts.speak("Exit Special Characters Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                isspMode=false;
+                spModeToggle=0;
+                spMode.spHeadPoint=0;
             }
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==2) // spMode -> Forward
             {
@@ -239,15 +250,43 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
             else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & data==1) // spMode -> Selection
             {
-                spMode.spModeSelection(tts);
+                tyString.alreadyTyped = spMode.spModeSelection(tts,tyString.alreadyTyped);
+            }
+            /*
+             *  ###########Edit Mode Coding Starts Here
+             * */
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data== 14 & toggle==0)//Index + Middle Finger ==> Enter In Edit Mode
+            {
+                edMode.edModeInitialise(tts,tyString.alreadyTyped,getApplicationContext());
+            }
+            else if(/*allowSearchScan==true &*/ isNumberMode==false & isDatabaseMode==false & isspMode==false & data== 14 & toggle==1 & EditMode.editMode)//Index + Middle ==> Exit Edit Mode
+            {
+                tts.speak("Exit Edit Mode ",TextToSpeech.QUEUE_FLUSH,null,null);
+                toggle=0;
+                allowSearchScan=false;
+                EditMode.editMode=false;
+            }
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 2)//Index Finger to Navigate in Selected Word
+            {
+                edMode.edModeForwardNav(tts,tyString.alreadyTyped);
+            }
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==8)//RIng Finger for Decision Making
+            {
+                tts.speak("Decision Navigations ",TextToSpeech.QUEUE_FLUSH,null,null);
+                edMode.edModeDecisionNav(tts);
+            }
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data ==1) // Decision Selection in Edit Mode
+            {
+                edMode.edModeDecisionSelection(tts,tyString.alreadyTyped);
+            }
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==16)//Deletion in Edit Mode allowSearch Scan
+            {
+                tyString.alreadyTyped = edMode.edModeDeletion(tts,tyString.alreadyTyped);
             }
             /*
              *   #####Autosuggestions Mode
              * */
-//            else if()
-//            {
-//
-//            }
+
             /*
              *  ###########Database Mode Coding Starts Here
              * */

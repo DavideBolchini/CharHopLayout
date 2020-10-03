@@ -18,13 +18,9 @@ public class SpecialCharactersMode {
     int spHeadPoint;
     String searchValue;
 
-    boolean editMode=false;
-    String decision="";
-
-    String alredyTyped="";
-
     public SpecialCharactersMode(Context context)
     {
+
         this.context = context;
     }
 
@@ -107,51 +103,46 @@ public class SpecialCharactersMode {
         spPrev=true;
     }
 
-    public void spModeSelection(TextToSpeech tts)
+    public String spModeSelection(TextToSpeech tts,String alreadyTyped)
     {
         if(!spPrev)
         {
             searchValue = spSuggestions.get(spHeadPoint-1);
-            if(editMode & decision.equals("Insert"))
+
+            if(EditMode.editMode & EditMode.decision.equals("Insert"))
             {
-                //count("Selection in Edit");
-//                if(alredyTyped.charAt(insertion_index) == ' ')
-//                {
-//                    tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                    tts.speak(searchValue + " Inserted at space" , TextToSpeech.QUEUE_ADD, null, null);
-//                }
-//                else
-//                {
-//                    tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                    tts.speak(searchValue + " Inserted at \t"+alredyTyped.charAt(insertion_index) , TextToSpeech.QUEUE_ADD, null, null);
-//                }
-//                insertInEdit();
+                if(alreadyTyped.charAt(EditMode.insertion_index) == ' ')
+                {
+                    EditMode.speakInsertedAtSpace(tts,searchValue);
+                }
+                else
+                {
+                    EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
+                }
+                alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
             }
-            else if(editMode & decision.equals("Replace"))
+            else if(EditMode.editMode & EditMode.decision.equals("Replace"))
             {
-                //count("Selection in Edit");
-//                if(alredyTyped.charAt(insertion_index) == ' ')
-//                {
-//                    tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                    tts.speak(searchValue + " Replaced at space", TextToSpeech.QUEUE_ADD, null, null);
-//                }
-//                else
-//                {
-//                    tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                    tts.speak(searchValue + " Replaced at \t"+alredyTyped.charAt(insertion_index) , TextToSpeech.QUEUE_ADD, null, null);
-//                }
-//                replaceInEdit();
+                if(alreadyTyped.charAt(EditMode.insertion_index) == ' ')
+                {
+                    EditMode.speakReplacedAtSpace(tts,searchValue);
+                }
+                else
+                {
+                    EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
+                }
+                alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
             }
             else
             {
                 //count("Selection");
                 if(searchValue.equals(" "))
                 {
-                    addSpaceAtEnd(tts);
+                    alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
                 }
                 else
                 {
-                    addAtEnd(tts);
+                    alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
                 }
             }
             spPrev=false;
@@ -162,107 +153,99 @@ public class SpecialCharactersMode {
             {
                 searchValue = spSuggestions.get(spHeadPoint-1);
 
-                if(editMode & decision.equals("Insert"))
+                if(EditMode.editMode & EditMode.decision.equals("Insert"))
                 {
-//                    count("Selection in Edit");
-//                    if(alredyTyped.charAt(insertion_index) == ' ')
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Inserted at space" , TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    else
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Inserted at \t"+alredyTyped.charAt(insertion_index) , TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    insertInEdit();
+                    if(alreadyTyped.charAt(EditMode.insertion_index) == ' ')
+                    {
+                        EditMode.speakInsertedAtSpace(tts,searchValue);
+                    }
+                    else
+                    {
+                        EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
+                    }
+                    alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
                 }
-                else if(editMode & decision.equals("Replace"))
+                else if(EditMode.editMode & EditMode.decision.equals("Replace"))
                 {
-//                    count("Selection in Edit");
-//                    if(alredyTyped.charAt(insertion_index) == ' ')
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Replaced at space", TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    else
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Replaced at \t"+alredyTyped.charAt(insertion_index) , TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    replaceInEdit();
+                    if(alreadyTyped.charAt(EditMode.insertion_index) == ' ')
+                    {
+                        EditMode.speakReplacedAtSpace(tts,searchValue);
+                    }
+                    else
+                    {
+                        EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
+                    }
+                    alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
                 }
                 else
                 {
                     //count("Selection");
                     if(searchValue.equals(" "))
                     {
-                        addSpaceAtEnd(tts);
+                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
                     }
                     else
                     {
-                        addAtEnd(tts);
+                        alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
                     }
                 }
             }
             else
             {
                 searchValue=spSuggestions.get(spHeadPoint);
-                if(editMode & decision.equals("Insert"))
+
+                if(EditMode.editMode & EditMode.decision.equals("Insert"))
                 {
-//                    count("Selection in Edit");
-//                    if(alredyTyped.charAt(insertion_index) == ' ')
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Inserted at space" , TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    else
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Inserted at \t"+alredyTyped.charAt(insertion_index) , TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    insertInEdit();
+                    if(alreadyTyped.charAt(EditMode.insertion_index) == ' ')
+                    {
+                        EditMode.speakInsertedAtSpace(tts,searchValue);
+                    }
+                    else
+                    {
+                        EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
+                    }
+                    alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
                 }
-                else if(editMode & decision.equals("Replace"))
+                else if(EditMode.editMode & EditMode.decision.equals("Replace"))
                 {
-//                    count("Selection in Edit");
-//                    if(alredyTyped.charAt(insertion_index) == ' ')
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Replaced at space", TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    else
-//                    {
-//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-//                        tts.speak(searchValue + " Replaced at \t"+alredyTyped.charAt(insertion_index) , TextToSpeech.QUEUE_ADD, null, null);
-//                    }
-//                    replaceInEdit();
+                    if(alreadyTyped.charAt(EditMode.insertion_index) == ' ')
+                    {
+                        EditMode.speakReplacedAtSpace(tts,searchValue);
+                    }
+                    else
+                    {
+                        EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
+                    }
+                    alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
                 }
                 else
                 {
                     //count("Selection");
                     if(searchValue.equals(" "))
                     {
-                        addSpaceAtEnd(tts);
+                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
                     }
                     else
                     {
-                        addAtEnd(tts);
+                        alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
                     }
                 }
             }
         }
+        return alreadyTyped;
     }
 
-    public void addSpaceAtEnd(TextToSpeech tts)
+    public String addSpaceAtEnd(TextToSpeech tts,String alredyTyped, String searchValue)
     {
-        alredyTyped = alredyTyped +" ";
+        //alredyTyped = alredyTyped +" ";
+        alredyTyped = alredyTyped +searchValue;
         tts.setPitch(2.0f);
         tts.speak("space", TextToSpeech.QUEUE_ADD, null, null);
         tts.setPitch(1.0f);
+        return alredyTyped;
     }
 
-    public void addAtEnd(TextToSpeech tts)
+    public String addAtEnd(TextToSpeech tts,String alreadyTyped,String searchValue)
     {
         tts.setPitch(2.0f);
         //tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
@@ -283,7 +266,8 @@ public class SpecialCharactersMode {
         }
         //tts.speak(searchValue, TextToSpeech.QUEUE_ADD, null, null);
         tts.setPitch(1.0f);
-        alredyTyped = alredyTyped + searchValue;
+        alreadyTyped = alreadyTyped + searchValue;
+        return alreadyTyped;
     }
 
 }
