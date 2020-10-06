@@ -161,125 +161,145 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         public void onTapInputReceived(@NonNull String tapIdentifier, int data) {
             EarconManager earconManager = new EarconManager();
             earconManager.setupEarcons(MainActivity.tts,getApplicationContext().getPackageName());
-
-            if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==2) // alMode -> Forward
+            // alMode -> Forward
+            if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==2)
             {
                 alMode.alModeForward(tts);
             }
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 4) // alMode -> Backward
+            // alMode -> Backward
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 4)
             {
                 alMode.alModeBackward(tts);
             }
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==6) // alMode -> Hopping
+            // alMode -> Hopping
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==6)
             {
                 alMode.alModeHopping(tts);
             }
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==1) // alMode -> Selection
+            // alMode -> Selection
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==1)
             {
                 tyString.alreadyTyped = alMode.alModeSelect(tts,tyString.alreadyTyped);
             }
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 30) // alMode -> SpeakOut
+            // alMode -> SpeakOut
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 30)
             {
                 alMode.alModeSpeakOut(tts,tyString.alreadyTyped);
             }
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==16) // alMode ->Deletion
+            // alMode ->Deletion
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==16)
             {
                 tyString.alreadyTyped = alMode.alModeDelete(tts,tyString.alreadyTyped);
             }
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 8) // alMode -> Reset
+            // alMode -> Reset
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 8)
             {
                 alMode.alModeReset(tts);
             }
             /*
              *  ###########Number Mode Coding Starts Here
              * */
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==false & data==3) // nmMode -> Enter
+            // nmMode -> Enter
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==false & data==3)
             {
-                //Enter Number Mode
                 tts.speak("Entered Number Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                 isNumberMode=true;
                 numberModeToggle=1;
             }
+            //nmMode -> Exit
             else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==3) // nmMode -> Exit
             {
-                //Exit Number Mode
                 tts.speak("Exit Number Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                 isNumberMode=false;
                 numberModeToggle=0;
                 nmMode.numberHeadPoint = 0;
             }
-            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==2) // nmMode -> Forward
+            // nmMode -> Forward
+            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==2)
             {
                 nmMode.nmModeForward(tts);
             }
-            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==4) // nmMode -> Backward
+            // nmMode -> Backward
+            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==4)
             {
                 nmMode.nmModeBackward(tts);
             }
-            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==1) // nmMode -> Selection
+            // nmMode -> Selection
+            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==1)
             {
                 tyString.alreadyTyped = nmMode.nmModeSelection(tts,tyString.alreadyTyped);
             }
-            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==16) // nmMode -> Delete
+            // nmMode -> Delete
+            else if(!allowSearchScan & isNumberMode==true & numberModeToggle==1 & isDatabaseMode==false & isspMode==false & data==16)
             {
                 tyString.alreadyTyped = nmMode.nmModeDeletion(tts,tyString.alreadyTyped);
             }
             /*
              *  ###########Special Characters Mode Coding Starts Here
              * */
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==false & data==5) // spMode -> Enter
+            // spMode -> Enter
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==false & data==5)
             {
                 tts.speak("Entered Special Characters Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                 isspMode=true;
                 spModeToggle=1;
             }
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1  & data==5) // spMode -> Exit
+            // spMode -> Exit
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1  & data==5)
             {
                 tts.speak("Exit Special Characters Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                 isspMode=false;
                 spModeToggle=0;
                 spMode.spHeadPoint=0;
             }
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==2) // spMode -> Forward
+            // spMode -> Forward
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==2)
             {
                 spMode.spModeForward(tts);
             }
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==4) // spMode -> Backward
+            // spMode -> Backward
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & spModeToggle==1 & data==4)
             {
                 spMode.spModeBackward(tts);
             }
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & data==1) // spMode -> Selection
+            // spMode -> Selection
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspMode==true & data==1)
             {
                 tyString.alreadyTyped = spMode.spModeSelection(tts,tyString.alreadyTyped);
             }
             /*
              *  ###########Edit Mode Coding Starts Here
              * */
-            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data== 14 & toggle==0)//Index + Middle Finger ==> Enter In Edit Mode
+            //Index + Middle Finger ==> Enter In Edit Mode
+            else if(!allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data== 14 & toggle==0)
             {
                 edMode.edModeInitialise(tts,tyString.alreadyTyped,getApplicationContext());
             }
-            else if(/*allowSearchScan==true &*/ isNumberMode==false & isDatabaseMode==false & isspMode==false & data== 14 & toggle==1 & EditMode.editMode)//Index + Middle ==> Exit Edit Mode
+            //Index + Middle ==> Exit Edit Mode
+            else if(/*allowSearchScan==true &*/ isNumberMode==false & isDatabaseMode==false & isspMode==false & data== 14 & toggle==1 & EditMode.editMode)
             {
                 tts.speak("Exit Edit Mode ",TextToSpeech.QUEUE_FLUSH,null,null);
                 toggle=0;
                 allowSearchScan=false;
                 EditMode.editMode=false;
             }
-            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 2)//Index Finger to Navigate in Selected Word
+            //Index Finger to Navigate in Selected Word
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data == 2)
             {
                 edMode.edModeForwardNav(tts,tyString.alreadyTyped);
             }
-            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==8)//RIng Finger for Decision Making
+            //RIng Finger for Decision Making
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==8)
             {
-                tts.speak("Decision Navigations ",TextToSpeech.QUEUE_FLUSH,null,null);
                 edMode.edModeDecisionNav(tts);
             }
-            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data ==1) // Decision Selection in Edit Mode
+            // Decision Selection in Edit Mode
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data ==1)
             {
                 edMode.edModeDecisionSelection(tts,tyString.alreadyTyped);
             }
-            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==16)//Deletion in Edit Mode allowSearch Scan
+            //Deletion in Edit Mode allowSearch Scan
+            else if(allowSearchScan & isNumberMode==false & isDatabaseMode==false & isspMode==false & data==16)
             {
                 tyString.alreadyTyped = edMode.edModeDeletion(tts,tyString.alreadyTyped);
             }

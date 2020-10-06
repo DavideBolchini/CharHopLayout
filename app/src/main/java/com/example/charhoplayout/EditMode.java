@@ -176,7 +176,7 @@ public class EditMode {
         sb.insert(insertion_index,searchValue);
         alredyTyped=sb.toString();
         Log.i("Word",alredyTyped);
-        MainActivity.allowSearchScan=true;
+        //MainActivity.allowSearchScan=true;
         EditMode.nav_index=0;
         return alredyTyped;
     }
@@ -186,7 +186,7 @@ public class EditMode {
         tts.setPitch(1.0f);
         alredyTyped = alredyTyped.replace(alredyTyped.charAt(insertion_index),searchValue.charAt(0));
         Log.i("Word",alredyTyped);
-        MainActivity.allowSearchScan=true;
+        //MainActivity.allowSearchScan=true;
         EditMode.nav_index=0;
         return alredyTyped;
     }

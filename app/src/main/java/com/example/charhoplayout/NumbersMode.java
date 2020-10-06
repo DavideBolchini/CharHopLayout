@@ -118,7 +118,6 @@ public class NumbersMode {
             }
             else
             {
-                //count("Selection");
                 if(searchValue.equals(" "))
                 {
                     alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
