@@ -154,7 +154,41 @@ public class AlphabetMode {
         hopping=true;
     }
 
-    public String alModeSelect(TextToSpeech tts, String alreadyTyped)
+    /*
+     *  data parameter plays major role : Gestures are mapped to numbers
+     * front, back and prev variables are used to Manipulate the index over suggestions
+     *
+     * When moving forward using Index Finger : Make back = true
+     *
+     * When moving backward using Middle Finger : Make front = true and prev = true
+     *
+     * As we start the character scanning we need to character a to be spoken out so we cannot increment first : if that is done then a will never be considered
+     * So first a is spoken out and then header is incremented. So always its : header =0 a -> header 1 -> b --> header 2 ...
+     *
+     * As we have started forward navigation and now we want to go backward : eg. spoken is b but header=2 (c) so we need 2 steps back which is done at Backward navigation code
+     * that is the special case rest of the backward navigation requires header--;
+     *
+     * Similar header Manipulation is required for Selection of Characters :
+     *
+     * The Selection Code Follows the below code strucuture :-
+     *
+     * if (prev == false) --> !prev --> !false (true)
+     * {
+     *           Character Scanning started and never done backward navigation Required get(header - 1)
+     * }
+     *else(prev will be true)
+     * {
+     *      if(front == false) --> !front --> !false (true)
+     *      {
+     *          Backward navigation and then forward navigation : eg: a b c d : c spoken but header at d so get(header - 1)
+     *      }
+     *      else
+     *      {
+     *          In backward direction the character need to be selected where the header is so its just get**(header)** and not get(header-1)
+     *      }
+     * }
+     * */
+    public ArrayList<String> alModeSelect(TextToSpeech tts, String alreadyTyped, String word)
     {
         if (!prev)
         {
@@ -171,6 +205,7 @@ public class AlphabetMode {
                     EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                 }
                 alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                word = "";
             }
             else if(EditMode.editMode & EditMode.decision.equals("Replace"))
             {
@@ -183,16 +218,21 @@ public class AlphabetMode {
                     EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                 }
                 alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                word = "";
             }
             else
             {
                 if(searchValue.equals(" "))
                 {
-                    alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
+                    alreadyTyped = addSpaceAtEnd(tts, alreadyTyped, word, searchValue);
+                    word = "";
+
                 }
                 else
                 {
-                    alreadyTyped = addAtEnd(tts,alreadyTyped, searchValue); //Here we will right the code for appending the character
+                    word = addAtEnd(tts, word, searchValue);
+                    //alreadyTyped = alreadyTyped;
+                    //alreadyTyped = addAtEnd(tts,alreadyTyped, searchValue); //Here we will right the code for appending the character
                 }
             }
             prev = false;
@@ -214,6 +254,7 @@ public class AlphabetMode {
                         EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else if(EditMode.editMode & EditMode.decision.equals("Replace"))
                 {
@@ -226,21 +267,26 @@ public class AlphabetMode {
                         EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else
                 {
                     if(searchValue.equals(" "))
                     {
-                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
-                        //addSpaceAtEnd(tts);
-                        alreadyTyped = alreadyTyped + " ";
-                        tts.setPitch(2.0f);
-                        tts.speak("space",TextToSpeech.QUEUE_ADD,null,null);
-                        tts.setPitch(1.0f);
+//                        tts.playEarcon(selectEarcon,TextToSpeech.QUEUE_FLUSH,null,null);
+//                        //addSpaceAtEnd(tts);
+//                        alreadyTyped = alreadyTyped + word + " ";
+//                        tts.setPitch(2.0f);
+//                        tts.speak("space",TextToSpeech.QUEUE_ADD,null,null);
+//                        tts.setPitch(1.0f);
+                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,word,searchValue);
+                        word = "";
                     }
                     else
                     {
-                        alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue); //Here we will right the code for appending the character
+                        word = addAtEnd(tts, word, searchValue);
+                        //alreadyTyped = alreadyTyped;
+                        //alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue); //Here we will right the code for appending the character
                     }
                 }
             }
@@ -260,6 +306,7 @@ public class AlphabetMode {
                         EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else if(EditMode.editMode & EditMode.decision.equals("Replace"))
                 {
@@ -272,21 +319,28 @@ public class AlphabetMode {
                         EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else
                 {
                     if(searchValue.equals(" "))
                     {
-                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
+                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,word,searchValue);
+                        word="";
                     }
                     else
                     {
-                        alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue); //Here we will right the code for appending the character
+                        word = addAtEnd(tts, word, searchValue);
+                        //alreadyTyped = alreadyTyped;
+                        //alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue); //Here we will right the code for appending the character
                     }
                 }
             }
         }
-        return alreadyTyped;
+        ArrayList<String> results = new ArrayList<>();
+        results.add(word);
+        results.add(alreadyTyped);
+        return results;
     }
 
 
@@ -305,31 +359,53 @@ public class AlphabetMode {
         prev=false;
     }
 
-    public String alModeDelete(TextToSpeech tts, String alreadyTyped)
+    public ArrayList<String> alModeDelete(TextToSpeech tts, String alreadyTyped, String word)
     {
-        if(alreadyTyped.isEmpty())
+        if(alreadyTyped.isEmpty() & word.length() == 0)
         {
             tts.speak("No Character to Delete", TextToSpeech.QUEUE_FLUSH, null, null);
             EditMode.nav_index=0;//After Deleting Entirely a word if you select a new word then it should start from first character
         }
         else
         {
-            //Normal Deletion from End of the String
-            del_char = alreadyTyped.substring(alreadyTyped.length()-1);
-
-            if(del_char.equals(" "))
+            if(word.length() == 0)
             {
-                tts.speak("Space", TextToSpeech.QUEUE_ADD, null, null);
-                tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                del_char = alreadyTyped.substring(alreadyTyped.length()-1);
+
+                if(del_char.equals(" "))
+                {
+                    tts.speak("Space", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                else
+                {
+                    tts.speak(del_char+"", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                alreadyTyped = alreadyTyped.substring(0,alreadyTyped.length()-1);
             }
             else
             {
-                tts.speak(del_char+"", TextToSpeech.QUEUE_ADD, null, null);
-                tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                //Normal Deletion from End of the String
+                del_char = word.substring(word.length()-1);
+
+                if(del_char.equals(" "))
+                {
+                    tts.speak("Space", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                else
+                {
+                    tts.speak(del_char+"", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                word = word.substring(0,word.length()-1);
             }
-            alreadyTyped = alreadyTyped.substring(0,alreadyTyped.length()-1);
         }
-        return alreadyTyped;
+        ArrayList<String> results = new ArrayList<>();
+        results.add(word);
+        results.add(alreadyTyped);
+        return results;
     }
 
     public void speakOutSelection(TextToSpeech tts,String text)
@@ -356,10 +432,17 @@ public class AlphabetMode {
         }
     }
 
-    public String addSpaceAtEnd(TextToSpeech tts,String alreadyTyped,String searchValue)
+    public String addSpaceAtEnd(TextToSpeech tts,String alreadyTyped,String word,String searchValue)
     {
         //alreadyTyped = alreadyTyped +" ";
-        alreadyTyped = alreadyTyped +searchValue;
+        if(alreadyTyped.length() == 0)
+        {
+            alreadyTyped = alreadyTyped + word;
+        }
+        else
+        {
+            alreadyTyped = alreadyTyped + searchValue + word;
+        }
         tts.setPitch(2.0f);
         tts.speak("space", TextToSpeech.QUEUE_ADD, null, null);
         tts.setPitch(1.0f);

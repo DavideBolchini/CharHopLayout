@@ -103,7 +103,7 @@ public class SpecialCharactersMode {
         spPrev=true;
     }
 
-    public String spModeSelection(TextToSpeech tts,String alreadyTyped)
+    public ArrayList<String> spModeSelection(TextToSpeech tts, String alreadyTyped, String word)
     {
         if(!spPrev)
         {
@@ -120,6 +120,7 @@ public class SpecialCharactersMode {
                     EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                 }
                 alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                word = "";
             }
             else if(EditMode.editMode & EditMode.decision.equals("Replace"))
             {
@@ -132,17 +133,22 @@ public class SpecialCharactersMode {
                     EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                 }
                 alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                word = "";
             }
             else
             {
                 //count("Selection");
                 if(searchValue.equals(" "))
                 {
-                    alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
+                    alreadyTyped = addSpaceAtEnd(tts, alreadyTyped, word, searchValue);
+                    word = "";
+                    //alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
                 }
                 else
                 {
-                    alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
+                    word = addAtEnd(tts, word, searchValue);
+                    //alreadyTyped = alreadyTyped;
+                    //alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
                 }
             }
             spPrev=false;
@@ -164,6 +170,7 @@ public class SpecialCharactersMode {
                         EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else if(EditMode.editMode & EditMode.decision.equals("Replace"))
                 {
@@ -176,17 +183,22 @@ public class SpecialCharactersMode {
                         EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else
                 {
                     //count("Selection");
                     if(searchValue.equals(" "))
                     {
-                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
+                        alreadyTyped = addSpaceAtEnd(tts, alreadyTyped, word, searchValue);
+                        word = "";
+                        //alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
                     }
                     else
                     {
-                        alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
+                        word = addAtEnd(tts, word, searchValue);
+                        //alreadyTyped = alreadyTyped;
+                        //alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
                     }
                 }
             }
@@ -205,6 +217,7 @@ public class SpecialCharactersMode {
                         EditMode.speakInsertedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.insertInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else if(EditMode.editMode & EditMode.decision.equals("Replace"))
                 {
@@ -217,28 +230,36 @@ public class SpecialCharactersMode {
                         EditMode.speakReplacedAtCharacter(tts,searchValue,alreadyTyped.charAt(EditMode.insertion_index));
                     }
                     alreadyTyped = EditMode.replaceInEdit(tts,alreadyTyped,searchValue,EditMode.insertion_index);
+                    word = "";
                 }
                 else
                 {
                     //count("Selection");
                     if(searchValue.equals(" "))
                     {
-                        alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
+                        alreadyTyped = addSpaceAtEnd(tts, alreadyTyped, word, searchValue);
+                        word = "";
+                        //alreadyTyped = addSpaceAtEnd(tts,alreadyTyped,searchValue);
                     }
                     else
                     {
-                        alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
+                        word = addAtEnd(tts, word, searchValue);
+                        //alreadyTyped = alreadyTyped;
+                        //alreadyTyped = addAtEnd(tts,alreadyTyped,searchValue);
                     }
                 }
             }
         }
-        return alreadyTyped;
+        ArrayList<String> results = new ArrayList<>();
+        results.add(word);
+        results.add(alreadyTyped);
+        return results;
     }
 
-    public String addSpaceAtEnd(TextToSpeech tts,String alredyTyped, String searchValue)
+    public String addSpaceAtEnd(TextToSpeech tts,String alredyTyped,String word, String searchValue)
     {
         //alredyTyped = alredyTyped +" ";
-        alredyTyped = alredyTyped +searchValue;
+        alredyTyped = alredyTyped +word + searchValue;
         tts.setPitch(2.0f);
         tts.speak("space", TextToSpeech.QUEUE_ADD, null, null);
         tts.setPitch(1.0f);
