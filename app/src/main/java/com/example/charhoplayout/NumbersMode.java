@@ -2,6 +2,7 @@ package com.example.charhoplayout;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -236,7 +237,7 @@ public class NumbersMode {
 
     public ArrayList<String> nmModeDeletion(TextToSpeech tts,String alreadyTyped,String word)
     {
-        if(alreadyTyped.isEmpty())
+        if(alreadyTyped.isEmpty() & word.isEmpty())
         {
             tts.speak("No Character to Delete", TextToSpeech.QUEUE_FLUSH, null, null);
             //nav_index=0;//After Deleting Entirely a word if you select a new word then it should start from first character
@@ -262,8 +263,9 @@ public class NumbersMode {
             }
             else
             {
+                //tts.speak("Reached HEre",TextToSpeech.QUEUE_ADD,null,null);
                 //Normal Deletion from End of the String in Number Mode
-                del_char = word.substring(alreadyTyped.length()-1);
+                del_char = word.substring(word.length()-1);
 
                 if(del_char.equals(" "))
                 {
@@ -275,7 +277,7 @@ public class NumbersMode {
                     tts.speak(del_char+"", TextToSpeech.QUEUE_ADD, null, null);
                     tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
                 }
-                word = word.substring(0,alreadyTyped.length()-1);
+                word = word.substring(0,word.length()-1);
             }
         }
         ArrayList<String> results = new ArrayList<>();

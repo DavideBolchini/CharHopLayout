@@ -79,6 +79,10 @@ public class EditMode {
             {
                 tts.speak("space",TextToSpeech.QUEUE_FLUSH,null,null);
             }
+            else if(alpha == '#')
+            {
+                tts.speak("Hash",TextToSpeech.QUEUE_FLUSH,null,null);
+            }
             else
             {
                 tts.speak(Character.toString(alpha),TextToSpeech.QUEUE_FLUSH,null,null);
@@ -150,19 +154,18 @@ public class EditMode {
                 tts.speak("Space Deleted between Syntagm",TextToSpeech.QUEUE_FLUSH,null,null);
                 tts.playEarcon(deleteChar,TextToSpeech.QUEUE_FLUSH,null,null);
                 alredyTyped=sb_deletion.toString();
-
             }
             else
             {
                 char delete_char_between = alredyTyped.charAt(deleteion_index);
 
                 StringBuilder sb_deletion = new StringBuilder(alredyTyped);
-                sb_deletion.deleteCharAt(deleteion_index);
+                tts.speak(String.valueOf(sb_deletion.charAt(deleteion_index)),TextToSpeech.QUEUE_ADD,null,null);
 
+                sb_deletion.deleteCharAt(deleteion_index);
                 //tts.speak(delete_char_between+" Deleted between Syntagm",TextToSpeech.QUEUE_FLUSH,null,null);
                 tts.playEarcon(deleteChar,TextToSpeech.QUEUE_FLUSH,null,null);
                 alredyTyped=sb_deletion.toString();
-
             }
             nav_index=nav_index-1;//Adjust the Navigation --> Otherwise it skips one alphabet to navigate
         }

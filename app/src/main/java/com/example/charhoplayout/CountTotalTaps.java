@@ -30,6 +30,7 @@ public class CountTotalTaps {
         this.counts.put("specialCharModeForward", 0);
         this.counts.put("specialCharModeBackward", 0);
         this.counts.put("specialCharModeSelection", 0);
+        this.counts.put("specialCharModeDeletion",0);
 
         this.counts.put("editModeEnter", 0);
         this.counts.put("editModeExit", 0);
@@ -75,6 +76,7 @@ public class CountTotalTaps {
                 +"Forward Taps: "+counts.get("specialCharModeForward")
                 +"\nBackword Taps: "+counts.get("specialCharModeBackward")
                 +"\nSelection Taps: "+counts.get("specialCharModeSelection")
+                +"\nDeletion Taps: "+counts.get("specialCharModeDeletion")
                 +"\n\n"+"Edit Mode Tapping Info:\n"
                 +"Enter Edit Mode Taps: "+counts.get("editModeEnter")
                 +"\nExit Edit Mode Taps: "+counts.get("editModeExit")
@@ -103,6 +105,7 @@ public class CountTotalTaps {
                 + counts.get("specialCharModeForward")
                 + counts.get("specialCharModeBackward")
                 + counts.get("specialCharModeSelection")
+                + counts.get("specialCharModeDeletion")
                 + counts.get("editModeEnter")
                 + counts.get("editModeExit")
                 + counts.get("editModeForwardNav")

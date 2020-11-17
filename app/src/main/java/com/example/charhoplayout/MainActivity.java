@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 countTotalTaps.performCounting("specialCharModeBackward");
             }
             // spMode -> Selection
-            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspecialCharMode==true & isAutoSuggestionMode==false & data==1)
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspecialCharMode==true & spModeToggle==1 & isAutoSuggestionMode==false & data==1)
             {
                 //tyString.alreadyTyped = specialCharMode.spModeSelection(tts,tyString.alreadyTyped,tyString.word);
                 ArrayList<String> results;
@@ -335,6 +335,19 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Log.d("TypedString",tyString.alreadyTyped);
 
                 countTotalTaps.performCounting("specialCharModeSelection");
+            }
+            // spMode -> Deletion
+            else if(!allowSearchScan & isNumberMode==false & numberModeToggle==0 & isDatabaseMode==false & isspecialCharMode==true & spModeToggle==1 & isAutoSuggestionMode==false & data==16)
+            {
+                ArrayList<String> results;
+                results = specialCharMode.spModeDeletion(tts,tyString.alreadyTyped,tyString.word);
+                tyString.word = results.get(0);
+                tyString.alreadyTyped = results.get(1);
+
+                Log.d("TypedWord",tyString.word);
+                Log.d("TypedString",tyString.alreadyTyped);
+
+                countTotalTaps.performCounting("specialCharModeDeletion");
             }
             /*
              *  ###########Edit Mode Coding Starts Here
@@ -350,11 +363,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 {
                     tyString.alreadyTyped = tyString.alreadyTyped +" "+tyString.word;
                 }
-                //tyString.word = "";
+                tyString.word = "";
 
                 Log.d("TypedWord",tyString.word);
                 Log.d("TypedString",tyString.alreadyTyped);
-
 
                 edMode.edModeInitialise(tts,tyString.alreadyTyped,getApplicationContext());
                 countTotalTaps.performCounting("editModeEnter");

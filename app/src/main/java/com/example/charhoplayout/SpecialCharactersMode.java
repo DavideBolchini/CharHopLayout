@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.example.charhoplayout.EarconManager.deleteChar;
+
 public class SpecialCharactersMode {
 
     Context context;
@@ -18,6 +20,8 @@ public class SpecialCharactersMode {
     int spHeadPoint;
     String searchValue;
 
+    String del_char;
+
     public SpecialCharactersMode(Context context)
     {
 
@@ -27,7 +31,7 @@ public class SpecialCharactersMode {
     public void spModeInitialise()
     {
         //Adding Special Characters into Different Plane
-        String spCharacters = "&,.,@,!,*,#,$,%";
+        String spCharacters = "&,.,@,!,*,#,$,%,?";
         spSuggestions = new ArrayList<>(Arrays.asList(spCharacters.split(",")));
         spSuggestionsAdapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,spSuggestions);
         spSuggestionsAdapter.notifyDataSetChanged();
@@ -255,6 +259,57 @@ public class SpecialCharactersMode {
         results.add(alreadyTyped);
         return results;
     }
+
+    public ArrayList<String> spModeDeletion(TextToSpeech tts,String alreadyTyped,String word)
+    {
+        if(alreadyTyped.isEmpty() & word.isEmpty())
+        {
+            tts.speak("No Character to Delete", TextToSpeech.QUEUE_FLUSH, null, null);
+            //nav_index=0;//After Deleting Entirely a word if you select a new word then it should start from first character
+        }
+        else
+        {
+            if(word.length() == 0)
+            {
+                //Normal Deletion from End of the String in Number Mode
+                del_char = alreadyTyped.substring(alreadyTyped.length()-1);
+
+                if(del_char.equals(" "))
+                {
+                    tts.speak("Space", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                else
+                {
+                    tts.speak(del_char+"", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                alreadyTyped = alreadyTyped.substring(0,alreadyTyped.length()-1);
+            }
+            else
+            {
+                //Normal Deletion from End of the String in Number Mode
+                del_char = word.substring(word.length()-1);
+
+                if(del_char.equals(" "))
+                {
+                    tts.speak("Space", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                else
+                {
+                    tts.speak(del_char+"", TextToSpeech.QUEUE_ADD, null, null);
+                    tts.playEarcon(deleteChar,TextToSpeech.QUEUE_ADD,null,null);
+                }
+                word = word.substring(0,word.length()-1);
+            }
+        }
+        ArrayList<String> results = new ArrayList<>();
+        results.add(word);
+        results.add(alreadyTyped);
+        return results;
+    }
+
 
     public String addSpaceAtEnd(TextToSpeech tts,String alredyTyped,String word, String searchValue)
     {
