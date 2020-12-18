@@ -1,3 +1,5 @@
+<h1> Screenless Typing : CharHopLayout</h1>
+
 This work is part of a larger research project in the area of Human-Computer Interaction at Indiana University (PI: Davide Bolchini) focused on the exploration of <b>‘Screenless Typing’</b> approaches to text entry. The goal is to make typing efficient and easy for the blind and visually impaired through the development of novel, entirely auditory keyboards that completely circumvent the use of the screen and are controllable by off-the-shelf finger worn devices. 
 
 <b>‘CharHopLayout’</b> is a manifestation of one of our auditory keyboard systems. It presents an auditory keyboard layout containing Alphabetical characters (A-Z), numbers (0-9) and Selected Special Characters, and controllable by TapStrap for input and navigation.  
