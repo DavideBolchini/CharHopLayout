@@ -41,7 +41,7 @@ public class AutoSuggestionsMode {
 
     public void forwardNavigateSuggestions(TextToSpeech tts,ArrayList<String> suggestionsResult)
     {
-        if(autoSuggestionHeadPoint==5)
+        if(autoSuggestionHeadPoint==SuggestionsResult.size())
         {
             autoSuggestionHeadPoint=0;
         }

@@ -22,7 +22,7 @@ public class AlphabetMode {
     ArrayList<String> suggestions;
     ArrayAdapter<String> suggestionsAdapter;
 
-    int head_point;
+    static int head_point;
 
     boolean front,back,prev,hopping;
 
@@ -33,7 +33,6 @@ public class AlphabetMode {
     public AlphabetMode(Context context)
     {
         this.context = context;
-
     }
 
     public void alModeInitialise()

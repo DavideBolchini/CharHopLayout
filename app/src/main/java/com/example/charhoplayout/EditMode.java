@@ -135,6 +135,8 @@ public class EditMode {
             MainActivity.allowSearchScan = false;
             editMode = true;
         }
+
+        AlphabetMode.head_point = 0;
     }
 
     public String edModeDeletion(TextToSpeech tts, String alredyTyped)
@@ -187,7 +189,10 @@ public class EditMode {
     public static String replaceInEdit(TextToSpeech tts, String alredyTyped,String searchValue,int insertion_index)
     {
         tts.setPitch(1.0f);
-        alredyTyped = alredyTyped.replace(alredyTyped.charAt(insertion_index),searchValue.charAt(0));
+        StringBuilder sb = new StringBuilder(alredyTyped);
+        sb.setCharAt(insertion_index,searchValue.charAt(0));
+        //alredyTyped = alredyTyped.replace(alredyTyped.charAt(insertion_index),searchValue.charAt(0));
+        alredyTyped = sb.toString();
         Log.i("Word",alredyTyped);
         //MainActivity.allowSearchScan=true;
         EditMode.nav_index=0;
