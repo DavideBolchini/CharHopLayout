@@ -152,26 +152,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             commands = loadAlphabletModeCommands(commands,tyString.alreadyTyped,tyString.word);
 
-            //commands.put("forward", () -> alMode.alModeForward(tts));
-            //commands.put("backward", () -> alMode.alModeBackward(tts));
-            //commands.put("hopping", () -> alMode.alModeHopping(tts));
-
-//            commands.put("selection", () -> {
-//                ArrayList<String> results;
-//                results = alMode.alModeSelect(tts, tyString.alreadyTyped, tyString.word);
-//                tyString.word = results.get(0);
-//                tyString.alreadyTyped = results.get(1);
-//            });
-//
-//            commands.put("deletion", () -> {
-//                ArrayList<String> results;
-//                results = alMode.alModeDelete(tts, tyString.alreadyTyped, tyString.word);
-//                tyString.word = results.get(0);
-//                tyString.alreadyTyped = results.get(1);
-//            });
-//
-//            commands.put("speakout", () -> alMode.alModeSpeakOut(tts,tyString.alreadyTyped));
-//            commands.put("reset", () -> alMode.alModeReset(tts));
         }
 
         @Override
@@ -342,9 +322,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         break;
 
                     default:
-                        tts.speak("No Such Gesture",TextToSpeech.QUEUE_FLUSH,null,null);
                         //No Gesture found
-                        //tts.speak("No Such Gesture",TextToSpeech.QUEUE_FLUSH,null,null);
+                        tts.speak("No Such Gesture",TextToSpeech.QUEUE_FLUSH,null,null);
                 }
             }
             catch(NullPointerException npe)
