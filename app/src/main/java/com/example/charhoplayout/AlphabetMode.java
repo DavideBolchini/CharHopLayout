@@ -409,7 +409,7 @@ public class AlphabetMode {
 
     public void speakOutSelection(TextToSpeech tts,String text)
     {
-        if(text.isEmpty())
+        if(text.length() == 1 & text.charAt(0) == ' ')
         {
             tts.setPitch(1.5f);
             speakOut(tts,"No Character Selected");
