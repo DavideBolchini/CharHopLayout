@@ -1,8 +1,12 @@
-package com.example.charhoplayout;
+/*
+* Developer : Anup Atul Mulay
+* Contact Number: +1-317-998-0306
+* email: anup.mulay96@gmail.com / anmulay@iupui.edu
+* */
 
+package com.example.charhoplayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.bluetooth.BluetoothAdapter;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.tapwithus.sdk.TapListener;
 import com.tapwithus.sdk.TapSdk;
 import com.tapwithus.sdk.TapSdkFactory;
@@ -19,11 +22,9 @@ import com.tapwithus.sdk.airmouse.AirMousePacket;
 import com.tapwithus.sdk.bluetooth.BluetoothManager;
 import com.tapwithus.sdk.bluetooth.TapBluetoothManager;
 import com.tapwithus.sdk.mouse.MousePacket;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -82,10 +83,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         TapBluetoothManager tapBluetoothManager = new TapBluetoothManager(bluetoothManager);
         TapSdk sdk = new TapSdk(tapBluetoothManager);     // Connect Bluetooth Manager with Tap Strap SDK
 
-        TapSdkFactory.getDefault(getApplicationContext());
+        TapSdkFactory.getDefault(getApplicationContext());  //
         sdk.registerTapListener(mTap);
 
-        tts = new TextToSpeech(this,MainActivity.this);
+        tts = new TextToSpeech(this,MainActivity.this);  // Instantiate google Text-To-Speech Engine
 
         btnGetInfo = findViewById(R.id.btnGetInfo);
         btnResetInfo = findViewById(R.id.btnReset);
@@ -113,16 +114,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         });
     }
 
-    public TapListener mTap =new TapListener() {
-
-        AlphabetMode alMode = new AlphabetMode(MainActivity.this);
-        NumbersMode nmMode = new NumbersMode(MainActivity.this);
-        SpecialCharactersMode specialCharMode = new SpecialCharactersMode(MainActivity.this);
-        TypedString tyString = new TypedString();
-        EditMode edMode = new EditMode(MainActivity.this);
-        AutoSuggestionsMode autoSuggestionsMode = new AutoSuggestionsMode();
-        HashMap<String, Runnable> commands = new HashMap<>();
-
+    public TapListener mTap =new TapListener()
+    {
+        AlphabetMode alMode = new AlphabetMode(MainActivity.this);                 // Instantiate Alphabet Mode
+        NumbersMode nmMode = new NumbersMode(MainActivity.this);                  // Instantiate Number Mode
+        SpecialCharactersMode specialCharMode = new SpecialCharactersMode(MainActivity.this); // Instantiate Special Char Mode
+        TypedString tyString = new TypedString();                                       // Instantiate Syntagm
+        EditMode edMode = new EditMode(MainActivity.this);                       // Instantiate Edit Mode
+        AutoSuggestionsMode autoSuggestionsMode = new AutoSuggestionsMode();           // Instantiate AutoSuggestion Mode
+        HashMap<String, Runnable> commands = new HashMap<>();                         // Instantiate commands holder for that mode
 
         @Override
         public void onBluetoothTurnedOn() {
@@ -140,24 +140,22 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         @Override
         public void onTapConnected(@NonNull String tapIdentifier) {
-            alMode.speakOut(tts,"Tap Strap connected to the phone   You can start keyflow");
-            alMode.alModeInitialise();
-            nmMode.nmModeInitialise();
-            specialCharMode.spModeInitialise();
-            tyString.typedStringInitialise();
-            //edMode.edModeInitialise(tts,tyString.alreadyTyped,getApplicationContext());
+            alMode.speakOut(tts,"Tap Strap connected to the phone. You can start keyflow");    // SpeakOut once tapStrap connected to phone
+            alMode.alModeInitialise();      // Initialise Alphabet Mode
+            nmMode.nmModeInitialise();      // Initialise Number Mode
+            specialCharMode.spModeInitialise(); // Initialise Special Char Mode
+
+            tyString.typedStringInitialise();   // Initialise Syntagm
 
             EarconManager earconManager = new EarconManager();
             earconManager.setupEarcons(MainActivity.tts,getApplicationContext().getPackageName());
 
-            commands = loadAlphabletModeCommands(commands,tyString.alreadyTyped,tyString.word);
-
+            commands = loadAlphabletModeCommands(commands,tyString.alreadyTyped,tyString.word); // Load Alphabet Mode commands
         }
 
         @Override
         public void onTapDisconnected(@NonNull String tapIdentifier) {
-            alMode.speakOut(tts,"Tap strap not connected to the phone");
-
+            alMode.speakOut(tts,"Tap strap not connected to the phone");       // SpeakOut once tapStrap unable to connect to phone
         }
 
         @Override
@@ -189,19 +187,23 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             {
                 switch (data)
                 {
-                    case 2:
+                    case 2: // Forward Gesture : Index Finger
+                        gestureCount();
                         commands.get("forward").run();
                         break;
 
-                    case 4:
+                    case 4: // Backward Gesture : Middle Finger
+                        gestureCount();
                         commands.get("backward").run();
                         break;
 
-                    case 6:
+                    case 6: // Hopping Gesture : Index + Middle Finger
+                        gestureCount();
                         commands.get("hopping").run();
                         break;
 
-                    case 1:
+                    case 1: // Selection Gesture : Thumb Finger
+                        gestureCount();
                         if(inEditMode == 1)
                         {
                             commands.get("selection").run();
@@ -221,27 +223,30 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         }
                         break;
 
-                    case 16:
+                    case 16: // Deletion Gesture : Pinky Finger
+                        gestureCount();
                         commands.get("deletion").run();
                         break;
 
-                    case 30:
+                    case 30: // Speak Out Gesture : Index + Middle + Ring + Pinky Finger
+                        gestureCount();
                         commands.get("speakout").run();
                         break;
 
-                    case 8:
+                    case 8: // Reset Gesture : Ring Finger
+                        gestureCount();
                         commands.get("reset").run();
                         break;
 
-                    case 3:
-                        //Enter Number Mode
+                    case 3: //Enter Number Mode Gesture : Index + Thumb Finger
+                        gestureCount();
                         if(inNumberMode == 0)
                         {
                             inNumberMode = 1;
                             tts.speak("Enter Number Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                             commands = loadNumberModeCommands(commands,tyString.alreadyTyped,tyString.word);
                         }
-                        //Exit Number Mode
+                        //Exit Number Mode : Index + Thumb Finger
                         else
                         {
                             commands = loadAlphabletModeCommands(commands,tyString.alreadyTyped,tyString.word);
@@ -251,14 +256,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         break;
 
                     case 5:
-                        //Enter Special Character Mode
+                        //Enter Special Character Mode : Middle + Thumb Finger
+                        gestureCount();
                         if(inSpecialCharMode == 0)
                         {
                             inSpecialCharMode = 1;
                             tts.speak("Enter Special Character Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                             commands = loadSpecialCharacterModeCommands(commands,tyString.alreadyTyped,tyString.word);
                         }
-                        //Exit Special Character Mode
+                        //Exit Special Character Mode : Middle + Thumb Finger
                         else
                         {
                             inSpecialCharMode = 0;
@@ -267,7 +273,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         }
                         break;
                     case 14:
-                        //Enter Edit Mode
+                        //Enter Edit Mode : Index + Middle + Ring Finger
+                        gestureCount();
                         if(inEditMode == 0 & EditMode.editMode==false)
                         {
                             inEditMode = 1;
@@ -294,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
                             commands = loadEditModeCommands(commands,tyString.alreadyTyped,tyString.word);
                         }
-                        //Exit Edit Mode
+                        //Exit Edit Mode : Index + Middle + Ring Finger
                         else if (EditMode.editMode==true)
                         {
                             inEditMode = 0;
@@ -305,14 +312,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         break;
 
                     case 9:
-                        //Enter Autosuggestion Mode
+                        //Enter Autosuggestion Mode : Ring + Thumb Finger
+                        gestureCount();
                         if(inAutoSuggestionMode == 0)
                         {
                             SuggestionsResult = autoSuggestionsMode.fetchAutoSuggestions(getApplicationContext(),tts,tyString.word);
                             commands = loadAutoSuggestionCommands(commands,SuggestionsResult);
                             inAutoSuggestionMode = 1;
                         }
-                        //Exit Autosuggestion Mode
+                        //Exit Autosuggestion Mode : Ring + Thumb Finger
                         else if(inAutoSuggestionMode == 1)
                         {
                             tts.speak("Exit Autosuggestion Mode",TextToSpeech.QUEUE_FLUSH,null,null);
@@ -328,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
             catch(NullPointerException npe)
             {
+                // No implementation found for run() so such gesture not recognised
                 tts.speak("Gesture Not Recognised",TextToSpeech.QUEUE_FLUSH,null,null);
             }
 
@@ -611,6 +620,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         }
 
+        /*
+        * Method to load Number Mode Commands
+        * Method Input: Current commands; alreadyTyped String; word String
+        * Method Output: Commands HashMap with Number Mode related commands
+        * */
         private HashMap<String,Runnable> loadNumberModeCommands(HashMap<String,Runnable> commands, String alredyTyped, String word)
         {
             commands.clear();
@@ -635,6 +649,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             return commands;
         }
 
+
+        /*
+         * Method to load Special Characters Mode Commands
+         * Method Input: Current commands; alreadyTyped String; word String
+         * Method Output: Commands HashMap with Special Characters Mode related commands
+         * */
         private HashMap<String, Runnable> loadSpecialCharacterModeCommands(HashMap<String,Runnable> commands,String alredyTyped, String word)
         {
             commands.clear();
@@ -657,6 +677,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             return commands;
         }
 
+        /*
+         * Method to load Alphabet Mode Commands
+         * Method Input: Current commands; alreadyTyped String; word String
+         * Method Output: Commands HashMap with Alphabet Mode related commands
+         * */
         private HashMap<String, Runnable> loadAlphabletModeCommands(HashMap<String,Runnable> commands,String alredyTyped,String word)
         {
             commands.clear();
@@ -682,6 +707,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             return commands;
         }
 
+        /*
+         * Method to load Edit Mode Commands
+         * Method Input: Current commands; alreadyTyped String; word String
+         * Method Output: Commands HashMap with Edit Mode related commands
+         * */
         private HashMap<String,Runnable> loadEditModeCommands(HashMap<String,Runnable> commands,String alredyTyped,String word)
         {
             inEditMode = 1;
@@ -697,6 +727,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             return commands;
         }
 
+        /*
+         * Method to load Autosuggestion Mode Commands
+         * Method Input: Current commands; alreadyTyped String; word String
+         * Method Output: Commands HashMap with Autosuggestion Mode related commands
+         * */
         private HashMap<String, Runnable> loadAutoSuggestionCommands(HashMap<String,Runnable> commands, ArrayList<String> SuggestionsResult)
         {
             inAutoSuggestionMode = 1;
@@ -707,6 +742,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             return commands;
 
+        }
+
+        public void gestureCount()
+        {
+            countTotalTaps.performCounting("TotalGestureCount");
         }
     };
 
