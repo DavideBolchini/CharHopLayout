@@ -240,13 +240,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
                     case 3: //Enter Number Mode Gesture : Index + Thumb Finger
                         gestureCount();
-                        if(inNumberMode == 0)
+                        if(inNumberMode == 0 & inSpecialCharMode == 0 & inAutoSuggestionMode == 0 & inEditMode == 0)
                         {
                             inNumberMode = 1;
                             tts.speak("Enter Number Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                             commands = loadNumberModeCommands(commands,tyString.alreadyTyped,tyString.word);
                         }
                         //Exit Number Mode : Index + Thumb Finger
+                        else if(inSpecialCharMode == 1 | inEditMode == 1 | inAutoSuggestionMode == 1)
+                        {
+                            tts.speak("Goto default Alphabet Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                        }
                         else
                         {
                             commands = loadAlphabletModeCommands(commands,tyString.alreadyTyped,tyString.word);
@@ -258,13 +262,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     case 5:
                         //Enter Special Character Mode : Middle + Thumb Finger
                         gestureCount();
-                        if(inSpecialCharMode == 0)
+                        if(inSpecialCharMode == 0 & inNumberMode == 0 & inAutoSuggestionMode == 0 & inEditMode == 0)
                         {
                             inSpecialCharMode = 1;
                             tts.speak("Enter Special Character Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                             commands = loadSpecialCharacterModeCommands(commands,tyString.alreadyTyped,tyString.word);
                         }
                         //Exit Special Character Mode : Middle + Thumb Finger
+                        else if (inNumberMode == 1 | inEditMode == 1 | inAutoSuggestionMode == 1)
+                        {
+                            tts.speak("Goto default Alphabet Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                        }
                         else
                         {
                             inSpecialCharMode = 0;
@@ -275,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     case 14:
                         //Enter Edit Mode : Index + Middle + Ring Finger
                         gestureCount();
-                        if(inEditMode == 0 & EditMode.editMode==false)
+                        if(inEditMode == 0 & EditMode.editMode==false & inNumberMode == 0 & inSpecialCharMode ==0 & inAutoSuggestionMode == 0)
                         {
                             inEditMode = 1;
                             if(tyString.word.length() == 0)
@@ -301,8 +309,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
                             commands = loadEditModeCommands(commands,tyString.alreadyTyped,tyString.word);
                         }
+                        else if(inNumberMode == 1 | inSpecialCharMode == 1 | inAutoSuggestionMode == 1)
+                        {
+                            tts.speak("Goto default Alphabet Mode",TextToSpeech.QUEUE_FLUSH,null,null);
+                        }
                         //Exit Edit Mode : Index + Middle + Ring Finger
-                        else if (EditMode.editMode==true)
+                        else if (inEditMode == 1 && EditMode.editMode==true)
                         {
                             inEditMode = 0;
                             EditMode.editMode = false;
@@ -314,11 +326,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     case 9:
                         //Enter Autosuggestion Mode : Ring + Thumb Finger
                         gestureCount();
-                        if(inAutoSuggestionMode == 0)
+                        if(inAutoSuggestionMode == 0 & inNumberMode == 0 & inSpecialCharMode == 0 & inEditMode == 0)
                         {
                             SuggestionsResult = autoSuggestionsMode.fetchAutoSuggestions(getApplicationContext(),tts,tyString.word);
                             commands = loadAutoSuggestionCommands(commands,SuggestionsResult);
                             inAutoSuggestionMode = 1;
+                        }
+                        else if(inNumberMode == 1 | inSpecialCharMode == 1 | inEditMode == 1 )
+                        {
+                            tts.speak("Goto default Alphabet Mode",TextToSpeech.QUEUE_FLUSH,null,null);
                         }
                         //Exit Autosuggestion Mode : Ring + Thumb Finger
                         else if(inAutoSuggestionMode == 1)

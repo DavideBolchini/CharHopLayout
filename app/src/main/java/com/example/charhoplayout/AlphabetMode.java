@@ -412,7 +412,7 @@ public class AlphabetMode {
         if(text.length() == 1 & text.charAt(0) == ' ')
         {
             tts.setPitch(1.5f);
-            speakOut(tts,"No Character Selected");
+            speakOut(tts,"No Character Selected to Speak Out");
             tts.setPitch(1.0f);
         }
         else

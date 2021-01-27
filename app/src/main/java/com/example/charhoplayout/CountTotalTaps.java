@@ -56,7 +56,7 @@ public class CountTotalTaps {
     public String displayTotalTapsCount()
     {
         String info = "";
-        info = "Taps Info:\nTotal Number Of Gestures\n\n"+counts.get("TotalGestureCount");
+        info = "Taps Info:\nTotal Number Of Gestures: "+counts.get("TotalGestureCount");
 
 //        info = "Taps Info:\nAlphabetical Mode:\n\n"
 //                +"Forward Taps: "+counts.get("alModeForward")
